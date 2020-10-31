@@ -1,2 +1,2 @@
 # 5GIoTEmergencyResponders
- AG15, BG96, Coral Reactjs, Nodejs, python
+An  intelligent  5GIoT  based  device  offering  a  set  of  services.  It  deals  with  theconvergence  of  various  services  like  air  quality  detection  usingsensors. It also facilitates low latency and reliable communicationdue  to  5G  services  used  in  the  system  design.  Other  offeredservices  are  real-time  voice-based  communication,  live  trackingof  intelligent  devices  with  GPS  navigation,  and  administrativedashboard.  With  the  interactive  dashboard,  it  is  convenient  tomanage the resources, to visualize the real-time sensor’s data andto  track  the  device’s  location.
