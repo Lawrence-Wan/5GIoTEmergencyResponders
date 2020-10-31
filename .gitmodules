@@ -1,0 +1,6 @@
+[submodule "5giot-admin"]
+	path = 5giot-admin
+	url = https://github.com/salihasjsu/5giot-admin.git
+[submodule "5giot-server"]
+	path = 5giot-server
+	url = https://github.com/salihasjsu/5giot-server.git
