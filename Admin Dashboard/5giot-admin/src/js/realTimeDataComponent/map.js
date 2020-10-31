@@ -44,7 +44,7 @@ const MapContainer = ({ width, height }) => {
   ];
 
   return (
-    <LoadScript googleMapsApiKey="AIzaSyBXueotq5UEyUcaysZHU_esRVGMLZl0aMs">
+    <LoadScript googleMapsApiKey="">
       <GoogleMap
         zoom={13}
         center={defaultCenter}

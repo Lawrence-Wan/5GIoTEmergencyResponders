@@ -1,9 +1,15 @@
 import React, { useState, useEffect, useRef } from "react";
-import { Button } from "react-bootstrap";
+import { Button, Card } from "react-bootstrap";
 import Chart from "chart.js";
 import "../../styles/realtime.css";
 import { chartConfig } from "../sharedComponents/chartConfig";
 import { Singleton } from "../websocketClient";
+import {
+  GoogleMap,
+  LoadScript,
+  Marker,
+  InfoWindow,
+} from "@react-google-maps/api";
 const maxLength = 10;
 let device_id = "";
 /**** END Chart Configurations ******* */
@@ -16,6 +22,14 @@ export default function RealTimePage({ showBtn, width, height, chartMain }) {
   const ws = useRef(null);
   const chartContainer = useRef(null);
   const [chartInst, setCharInst] = useState(chartMain);
+
+  const [defaultCenter, setDefaultCenter] = useState({
+    lat: 41.3851,
+    lng: 2.1734,
+  });
+
+  const [loc, setLoc] = useState([]);
+  const [selected, setSelected] = useState({});
   /*useEffect(() => {
     ws.current = new WebSocket("ws://127.0.0.1:9001");
     ws.current.onopen = () => {
@@ -30,7 +44,7 @@ export default function RealTimePage({ showBtn, width, height, chartMain }) {
   }, []);*/
   useEffect(() => {
     ws.current = Singleton.getInstance();
-    //console.log("Realtime", ws);
+    console.log("Realtime", ws);
     return () => {
       ws.current.close();
     };
@@ -101,7 +115,7 @@ export default function RealTimePage({ showBtn, width, height, chartMain }) {
     }
   }, [chartInst, showBtn]);
   useEffect(() => {
-    // Find a device based on its Id
+    // Method to find a device based on its Id
     const findDevice = (deviceId) => {
       for (let i = 0; i < devices.length; ++i) {
         if (devices[i].deviceId === deviceId) {
@@ -111,7 +125,7 @@ export default function RealTimePage({ showBtn, width, height, chartMain }) {
 
       return null;
     };
-
+    // Method to add device data into respective object
     const addDeviceData = (id, time, temperature, humidity) => {
       const existingDeviceIndex = findDevice(id);
       if (existingDeviceIndex == null) {
@@ -136,10 +150,13 @@ export default function RealTimePage({ showBtn, width, height, chartMain }) {
         }
       }
     };
+    //check if websocket object instantiated
     if (!ws.current) return;
     ws.current.onmessage = (e) => {
+      //listening on websocket
       if (isStop) return;
       const messageData = JSON.parse(e.data);
+      messageData.DeviceId = messageData.DeviceId + "";
       console.log(messageData);
       // time and either temperature or humidity are required
       if (
@@ -156,6 +173,26 @@ export default function RealTimePage({ showBtn, width, height, chartMain }) {
             console.log("selecting the first encountered device"); //selecting the first device if nothing is selected
             setSelectedDevice(messageData.DeviceId);
             device_id = messageData.DeviceId;
+            if (messageData.IotData.lat) {
+              let totalLat = 0;
+              let totalLng = 0;
+              for (var i = 0; i < loc.length; i++) {
+                totalLat = totalLat + loc.location.lat;
+              }
+              for (var i = 0; i < loc.length; i++) {
+                totalLng = totalLng + loc.location.lng;
+              }
+              setDefaultCenter({
+                lat:
+                  totalLat == 0
+                    ? messageData.IotData.lat
+                    : totalLat / loc.length,
+                lng:
+                  totalLng == 0
+                    ? messageData.IotData.long
+                    : totalLng / loc.length,
+              });
+            }
           }
           // device is new so add to list of devices
           console.log("new device entered into the list");
@@ -163,8 +200,22 @@ export default function RealTimePage({ showBtn, width, height, chartMain }) {
             ...listDevices,
             { deviceId: messageData.DeviceId },
           ]);
+          //add location for a new device on the map
+          if (messageData.IotData.lat) {
+            setLoc((loc) => [
+              ...loc,
+              {
+                id: messageData.DeviceId,
+                name: messageData.DeviceId,
+                location: {
+                  lat: messageData.IotData.lat,
+                  lng: messageData.IotData.long,
+                },
+              },
+            ]);
+          }
         }
-
+        //adding device data into the devices object
         addDeviceData(
           messageData.DeviceId,
           messageData.MessageDate,
@@ -172,8 +223,10 @@ export default function RealTimePage({ showBtn, width, height, chartMain }) {
           messageData.IotData.humidity
         );
         const index = devices.findIndex((x) => x.deviceId === device_id);
+        //  const locationIndex = loc.findIndex((x) => x.id === device_id);
 
         if (device_id === messageData.DeviceId) {
+          //updating chart for selected device
           console.log(devices);
           console.log("update chart for device:", device_id);
           chartInst.data.labels = devices[index].timeData;
@@ -183,7 +236,11 @@ export default function RealTimePage({ showBtn, width, height, chartMain }) {
         }
       }
     };
-  }, [isStop, devices, chartInst]);
+  }, [isStop, devices, chartInst, loc]);
+
+  useEffect(() => {
+    console.log("locations:", loc);
+  }, [loc]);
 
   /****************** FUNCTIONS**************** */
   function initDevice() {
@@ -248,6 +305,46 @@ export default function RealTimePage({ showBtn, width, height, chartMain }) {
           height={height}
           options={{ maintainAspectRatio: false }}
         />
+      </div>
+      <div style={{ marginTop: "5%" }}>
+        <Card style={{ height: "60vh" }} className="shadow">
+          <Card.Header className="bg-info font-weight-bold text-white">
+            Location
+          </Card.Header>
+          <Card.Body style={{ backgroundColor: "white", overflow: "scroll" }}>
+            <LoadScript googleMapsApiKey="">
+              <GoogleMap
+                zoom={13}
+                center={defaultCenter}
+                mapContainerStyle={{
+                  width: "100%",
+                  height: "100%",
+                }}
+              >
+                {loc.map((item) => {
+                  return (
+                    <Marker
+                      key={item.name}
+                      position={item.location}
+                      title={item.name}
+                      name={item.location}
+                      onClick={() => setSelected(item)}
+                    />
+                  );
+                })}
+                {selected.location && (
+                  <InfoWindow
+                    position={selected.location}
+                    clickable={true}
+                    onCloseClick={() => setSelected({})}
+                  >
+                    <p>{selected.name}</p>
+                  </InfoWindow>
+                )}
+              </GoogleMap>
+            </LoadScript>
+          </Card.Body>
+        </Card>
       </div>
     </div>
   );
