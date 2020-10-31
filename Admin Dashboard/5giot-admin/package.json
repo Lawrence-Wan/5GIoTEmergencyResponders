@@ -1,0 +1,75 @@
+{
+  "name": "5giot-admin",
+  "version": "0.1.0",
+  "private": true,
+  "engines": {
+    "npm": "6.14.7",
+    "node": "10.15.3"
+  },
+  "dependencies": {
+    "@apollo/react-hooks": "^4.0.0",
+    "@fortawesome/fontawesome-svg-core": "^1.2.30",
+    "@fortawesome/free-brands-svg-icons": "^5.14.0",
+    "@fortawesome/free-regular-svg-icons": "^5.14.0",
+    "@fortawesome/free-solid-svg-icons": "^5.14.0",
+    "@fortawesome/react-fontawesome": "^0.1.11",
+    "@react-google-maps/api": "^1.10.1",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.5.0",
+    "@testing-library/user-event": "^7.2.1",
+    "apollo-boost": "^0.4.9",
+    "bootstrap": "^4.5.2",
+    "chart.js": "^2.9.3",
+    "graphql": "^15.3.0",
+    "graphql-tag": "^2.11.0",
+    "localstorage": "^1.0.1",
+    "namor": "^2.0.2",
+    "pace": "0.0.4",
+    "pace-js": "^1.0.2",
+    "react": "^16.13.1",
+    "react-addons-update": "^15.6.2",
+    "react-azure-maps": "^0.1.2",
+    "react-bootstrap": "^1.3.0",
+    "react-bootstrap-table": "^4.3.1",
+    "react-bootstrap-table-next": "^4.0.3",
+    "react-data-table-component": "^6.11.3",
+    "react-dom": "^16.13.1",
+    "react-google-maps": "^9.4.5",
+    "react-icons": "^3.11.0",
+    "react-loading-overlay": "^1.0.1",
+    "react-pro-sidebar": "^0.4.4",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "^3.4.3",
+    "react-select": "^3.1.0",
+    "react-spinners": "^0.9.0",
+    "react-table": "^7.5.0",
+    "react-text-mask": "^5.4.3",
+    "reactn": "^2.2.7",
+    "reactstrap": "^8.5.1",
+    "serve": "^11.3.2",
+    "socket.io-client": "^2.3.0",
+    "styled-components": "^5.2.0",
+    "use-error-boundary": "^1.2.4"
+  },
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  }
+}

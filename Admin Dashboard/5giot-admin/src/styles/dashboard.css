@@ -1,0 +1,28 @@
+.dashboard-bg {
+  /*background-color: #0b5574;*/
+  /*background-image: url("../images/btstrp-bg1.jpg");*/
+  min-height: 100vh;
+  font-family: "Poppins", sans-serif;
+  background-color: #f8f9fc;
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.dashboard-panel {
+  height: 50px !important;
+}
+.nav .active {
+  border-right: 1px solid #015ec6;
+  font-weight: bold;
+}
+.nav .nav-link {
+  padding: 0px;
+}
+.content {
+  padding: 40px 20px 30px 40px;
+  background: #fff;
+}
+
+.sidebar {
+  font-size: 15px;
+}
